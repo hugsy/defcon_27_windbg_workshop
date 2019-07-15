@@ -61,7 +61,7 @@ srv*C:\Symbols*https://msdl.microsoft.com/download/symbols
 | Restart debugging session | `.restart` | |
 | Reboot system (KD) | `.reboot` | |
 
-
+[Back to top](#Content)
 #### `.printf` formatters
 
 | Description | Formatter | Examples |
@@ -72,7 +72,7 @@ srv*C:\Symbols*https://msdl.microsoft.com/download/symbols
 |Print the symbol pointed by address|`%y`|`.printf “%p\n”,nt!PsLoadedModuleList  // returns 0xffff8009bc2010`|
 |Pointer|`%p`|`.printf “%y\n”,ffff8009bc2010 // returns nt!PsLoadedModuleList`|
 
-
+[Back to top](#Content)
 ### Execution flow 
 
 | Action | Command | Examples |
@@ -86,7 +86,7 @@ srv*C:\Symbols*https://msdl.microsoft.com/download/symbols
 | Get information about current debugging status|`.lastevent`<br>`!analyze`||
 | Show stack call | `k`<br>`kp` | |
 
-
+[Back to top](#Content)
 ### Registers / Memory access
 
 | Action | Command | Examples |
@@ -103,7 +103,7 @@ srv*C:\Symbols*https://msdl.microsoft.com/download/symbols
 | Fill / Compare memory |`f`<br> `c`| `f @rsp l8 41`<br> `c @rsp l8 @rip`|
 |Dereference memory|`poi(<AddrOrSymbol>)`: dereference pointer size<br>`dwo()`: dereference DWORD<br>`qwo()`: dereference QWORD|`db poi( @$rax )`|
 
-
+[Back to top](#Content)
 ### Memory search
 
 | Action | Command | Examples |
@@ -113,7 +113,7 @@ srv*C:\Symbols*https://msdl.microsoft.com/download/symbols
 | Search for pattern in command |  `.shell` |`.shell -ci "<windbg command>" batch command`<br>`.shell -ci "!address" findstr PAGE_EXECUTE_READWRITE` |
 
 
-
+[Back to top](#Content)
 ### Breakpoints 
 
 | Action | Command | Examples |
@@ -134,7 +134,7 @@ srv*C:\Symbols*https://msdl.microsoft.com/download/symbols
 
 
 
-
+[Back to top](#Content)
 ### Symbols 
 
 | Action | Command | Examples |
@@ -146,6 +146,7 @@ srv*C:\Symbols*https://msdl.microsoft.com/download/symbols
 |Load module symbols|`ld`|`ld Module`<br>`ld *`|
 
 
+[Back to top](#Content)
 ### Convenience variables and functions 
 
 | Action | Command | Examples |
@@ -161,7 +162,7 @@ srv*C:\Symbols*https://msdl.microsoft.com/download/symbols
 |Thread ID|`$tid`||
 
 
-
+[Back to top](#Content)
 ### Useful extensions
 
 | Action | Command | Examples |
@@ -178,7 +179,7 @@ srv*C:\Symbols*https://msdl.microsoft.com/download/symbols
 |Dump UM heap information|`!heap`||
 
 
-
+[Back to top](#Content)
 ## LINQ & Debugger Data Model 
 
 | Variable description | Command | Examples |
@@ -196,7 +197,7 @@ srv*C:\Symbols*https://msdl.microsoft.com/download/symbols
 |Get the number of objects in `iterable`|`.Count()`||
 
 
-
+[Back to top](#Content)
 ## WinDbg JavaScript reference
 
 
@@ -215,7 +216,7 @@ srv*C:\Symbols*https://msdl.microsoft.com/download/symbols
 |Set Breakpoint|`host.namespace.Debugger.Utility.Control.SetBreakpointAtSourceLocation`<br>`host.namespace.Debugger.Utility.Control.SetBreakpointAtOffset`<br>`host.namespace.Debugger.Utility.Control.SetBreakpointForReadWrite`|
 |Iterate through `LIST_ENTRY`s|`host.namespace.Debugger.Utility.Collections.FromListEntry`|`var process_iterator = host.namespace.Debugger.Utility.Collections.FromListEntry( pAddrOfPsActiveProcessHead, "nt!_EPROCESS", "ActiveProcessLinks")`|
 
-
+[Back to top](#Content)
 ## Time-Travel Debugging
 
  
@@ -230,10 +231,11 @@ srv*C:\Symbols*https://msdl.microsoft.com/download/symbols
 | Jump to position `XX:YY` (DDM) | `<TtdPosition>.SeekTo()`| `dx @$curprocess.TTD.Lifetime.MinPosition.SeekTo()` |
 
 
-
+[Back to top](#Content)
 ## Additional resources
 
 
  * https://www.youtube.com/watch?list=PLhx7-txsG6t6n_E2LgDGqgvJtCHPL7UFu 
  * https://www.youtube.com/playlist?list=PLjAuO31Rg973XOVdi5RXWlrC-XlPZelGn 
 
+[Back to top](#Content)
