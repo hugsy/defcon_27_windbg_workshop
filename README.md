@@ -1,1 +1,1 @@
-# defcon_27_windbg_workshop
+# DefCon 27 workshop: Modern Debugging with WinDbg Preview
