@@ -227,7 +227,7 @@ srv*C:\Symbols*https://msdl.microsoft.com/download/symbols
 | Reverse Step Over | `p-` | |
 | Reverse Step Into | `t-` | |
 | Regenerate the index | `!ttdext.index` | |
-| Jump to position `XX:YY` (WinDbg) | `!tt XX:YY`| `!tt 1B:0` |
+| Jump to position `XX:YY` (WinDbg) | `!tt XX:YY`| `!tt 1B:0` | |
 | Jump to position `XX:YY` (DDM) | `<TtdPosition>.SeekTo()`| `dx @$curprocess.TTD.Lifetime.MinPosition.SeekTo()` |
 
 
