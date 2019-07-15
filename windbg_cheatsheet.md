@@ -167,7 +167,7 @@ srv*C:\Symbols*https://msdl.microsoft.com/download/symbols
 
 | Action | Command | Examples |
 | :--- | --- | --- |
-|Detailed information about loaded DLLs|`!dlls`<br>`!dlls -I` (show load order)<br>`!dlls -c 0xaddr (show DLL containing0xaddr)||
+|Detailed information about loaded DLLs|`!dlls`<br>`!dlls -I` (show load order)<br>`!dlls -c 0xaddr` (show DLL containing0xaddr)||
 |Get mapping information|`!address`|`!address -f:MEM_COMMIT`|
 |Change verbosity of symbol loader|`!sym`|`!sym noisy`<br>`!sym quiet`|
 |Dump PEB/TEB information|`!peb` <br>`!teb` ||
@@ -219,7 +219,6 @@ srv*C:\Symbols*https://msdl.microsoft.com/download/symbols
 [Back to top](#Content)
 ## Time-Travel Debugging
 
- 
 | Action | Command | Examples |
 | :--- | --- | --- |
 | DDM Object | `@$curprocess.TTD` | `dx @$curprocess.TTD` |
