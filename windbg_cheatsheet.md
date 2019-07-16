@@ -6,6 +6,8 @@
   - [Content](#Content)
   - [Setup](#Setup)
     - [Symbol Path](#Symbol-Path)
+    - [Providers](#Providers)
+    - [VS Code linting](#VS-Code-linting)
   - [Commands](#Commands)
     - [Basic commands](#Basic-commands)
       - [`.printf` formatters](#printf-formatters)
@@ -18,7 +20,7 @@
     - [Useful extensions](#Useful-extensions)
   - [LINQ & Debugger Data Model](#LINQ--Debugger-Data-Model)
   - [WinDbg JavaScript reference](#WinDbg-JavaScript-reference)
-    - [Int64](#Int64)
+    - [Dealing with `host.Int64`](#Dealing-with-hostInt64)
   - [Time-Travel Debugging](#Time-Travel-Debugging)
   - [Additional resources](#Additional-resources)
 
@@ -40,6 +42,29 @@ srv*C:\Symbols*https://msdl.microsoft.com/download/symbols
 ```
 
 [Back to top](#Content)
+
+
+### Providers
+
+In WinDbg
+```
+0:000> .scriptproviders
+```
+
+Should display something like
+```
+Available Script Providers:
+    NatVis (extension '.NatVis')
+    JavaScript (extension '.js')
+```
+
+### VS Code linting
+
+Download [JsProvider.d.ts](JsProvider.d.ts) to the root of your script and add the following at its top:
+```javascript
+/// <reference path="JSProvider.d.ts" />
+"use strict";
+```
 
 
 ## Commands
@@ -92,7 +117,7 @@ srv*C:\Symbols*https://msdl.microsoft.com/download/symbols
 
 | Action | Command | Examples |
 | :--- | --- | --- |
-| Read memory As | bytes: `db`<br>word: `dw`<br>dword: `dd`<br>qword: `dq`<br>pointer: `dp`<br>unicode string: `dW` |`db @sp 41 41 41 41`<br>`dw @rip 0041`<br>`dd @rax l4`<br>`dyb @rip`<br>`dps @esp`<br>`dW @rsp`|
+| Read memory As | bytes: `db`<br>word: `dw`<br>dword: `dd`<br>qword: `dq`<br>pointer: `dp`<br>unicode string: `dW` |`db @sp 41 41 41 41`<br>`dw @rip`<br>`dd @rax l4`<br>`dyb @rip`<br>`dps @esp`<br>`dW @rsp`|
 | Write memory As | bytes: `eb`<br>word: `ew`<br>dword: `ed`<br>qword: `eq`<br>ascii string:`ea`<br>Unicode string: `eu` |<br><br><br>`ea @pc "AAAA"` |
 | Read register(s) | `r`<br>`r [[REG0],REG1,...]` | `r rax,rbp` |
 | Write register(s) | `r [REG]=[VALUE]`  | `r rip=4141414141414141` |
@@ -121,14 +146,14 @@ srv*C:\Symbols*https://msdl.microsoft.com/download/symbols
 | :--- | --- | --- |
 | Examine | `x`|`x nt!*CreateProcess*`|
 | Display types|`dt`|`dt ntdll!_PEB @$peb`<br>`dt ntdll!_TEB –r @$teb`|
-| Set breakpoint|`bp` <br>`bp 0xaddr / symbol`<br>`bp /1 0xaddr` (disable after 1 hit)<br>`bp 0xaddr 7` (disable after 6 hits)|
+| Set breakpoint|`bp` <br>`bp 0xaddr (or mod!symbol)`| |
 |List breakpoints| `bl` | |
 |Disable breakpoint(s)| `bd [IDX]` (`IDX` is returned by `bl`) | `bd 1`<br>`bd *` |
 |Delete breakpoint(s)| `bc [IDX]` (`IDX` is returned by `bl`) | `bc 0`<br>`bc *` |
 |(Un)Set exception on event|`sx` |`sxe ld mydll.dll`|
 |Break on memory access|`ba`|`ba r 4 @esp`|
-|Define breakpoint command|`bp … [Command]`<br>Where [Command] can be<br>- an action: "`r ; g`"<br>- a condition: "`.if (@$rax == 1) {.printf \"rcx=%p\\\n\", @rcx }`"|
-| Enable breakpoint **after** *N* hit(s) | `bp <address> N+1` | |
+|Define breakpoint command|`bp … [Command]`<br>Where [Command] can be<br>- an action: "`r ; g`"<br>- a condition: "`.if (@$rax == 1) {.printf \"rcx=%p\\\n\", @rcx }`"| `bp kernel32!CreateFileA "da @rcx; g"` " |
+| Enable breakpoint **after** *N* hit(s) | `bp <address> N+1` | `bp /1 0xaddr` (temporary breakpoint)<br>`bp 0xaddr 7` (disable after 6 hits) |
 | Set "undefined" breakpoint | `bu <address>` | |
 
 
@@ -185,18 +210,21 @@ srv*C:\Symbols*https://msdl.microsoft.com/download/symbols
 
 | Variable description | Command | Examples |
 | :--- | --- | --- |
-| Create a variable| `dx @$myVar = VALUE`  | `dx @$ps = @$cursession.Processes` |
+| Create a variable | `dx @$myVar = VALUE`  | `dx @$ps = @$cursession.Processes` |
 | Delete a variable | `dx @$vars.Remove("VarName")` | `dx @$vars.Remove("ps")` |
-| List user defined variable | `dx @$vars`| `dx @$Debugger.State.UserVariables`|
-
+| List user defined variable | `dx @$vars` <br> `dx Debugger.State.UserVariables`| |
+| Bind address `Address` to <br>a `N`-entry array of type `T`  | `dx (T* [N])0xAddress ` | `dx (void** [5]) Debugger.State.PseudoRegisters.General.csp` |
  
 | Function description | Command | Examples |
 | :--- | --- | --- |
-| Filtering objects | `[Object].Where( [FILTER PATTERN] )` | `$CurSession.Processes.Where( x => x.Name == "notepad.exe")` |
+| Create a "lambda" inline function | `dx @$my_function = ([arg0, arg1] => Code)` | ` dx @$add = (x, y => x + y)` |
+| Filtering objects | `[Object].Where( [FILTER PATTERN] )` | `dx @$cursession.Processes.Where( x => x.Name == "notepad.exe")` |
+| Sorting objects | - asc: `[Object].OrderBy([Sort Expression])`<br>- desc: `[Object].OrderByDescending([Sort Expression])`<br> | `dx @$cursession.Processes.OrderByDescending(x => x.KernelObject.UniqueProcessId)` |
 | Projecting |`.Select( [PROJECTION KEYS] )` |`.Select( p => new { Item1 = p.Name, Item2 = p.Id } )` |
-|Access `n-th` element of `iterable`| `[i]` | `@$cursession.Processes[4]`|
-|Get the number of objects in `iterable`|`.Count()`||
-
+|Access `n-th` element of `iterable`| `$Object[n]` | `@$cursession.Processes[4]`|
+|Get the number of objects in `iterable`|`$Object.Count()`| `@$cursession.Processes.Count()`|
+|Create a iterator from a `LIST_ENTRY` structure | `dx Debugger.Utility.Collections.FromListEntry(Address, TypeAsString, "TypeMemberNameAsString")` | `dx @$ProcessList = Debugger.Utility.Collections.FromListEntry( *(nt!_LIST_ENTRY*)&(nt!PsActiveProcessHead), "nt!_EPROCESS", "ActiveProcessLinks")` <br>`dx @$HandleList = Debugger.Utility.Collections.FromListEntry( *(nt!_LIST_ENTRY*)&(nt!PspCidTable), "nt!_HANDLE_TABLE", "HandleTableList")`|
+| Apply a structure `S` to memory (`dt`-like) | `dx (S*)0xAddress` | `dx (nt!_EPROCESS*)&@$curprocess.KernelObject` |
 
 [Back to top](#Content)
 ## WinDbg JavaScript reference
@@ -216,7 +244,7 @@ srv*C:\Symbols*https://msdl.microsoft.com/download/symbols
 |Set Breakpoint|`host.namespace.Debugger.Utility.Control.SetBreakpointAtSourceLocation`<br>`host.namespace.Debugger.Utility.Control.SetBreakpointAtOffset`<br>`host.namespace.Debugger.Utility.Control.SetBreakpointForReadWrite`|
 |Iterate through `LIST_ENTRY`s|`host.namespace.Debugger.Utility.Collections.FromListEntry`|`var process_iterator = host.namespace.Debugger.Utility.Collections.FromListEntry( pAddrOfPsActiveProcessHead, "nt!_EPROCESS", "ActiveProcessLinks")`|
 
-### Int64
+### Dealing with `host.Int64`
 
 | Action | Command | Examples |
 | :--- | --- | --- |
@@ -233,7 +261,7 @@ srv*C:\Symbols*https://msdl.microsoft.com/download/symbols
 
 | Action | Command | Examples |
 | :--- | --- | --- |
-| DDM Object | `@$curprocess.TTD` | `dx @$curprocess.TTD` |
+| DDM Objects | `@$curprocess.TTD`<br>`@$cursession.TTD` | `dx @$curprocess.TTD.Threads.First().Lifetime` <br> `dx @$cursession.TTD.Calls("ntdll!Nt*File").Count()`|
 | Run execution back | `g-` | |
 | Reverse Step Over | `p-` | |
 | Reverse Step Into | `t-` | |
@@ -245,10 +273,12 @@ srv*C:\Symbols*https://msdl.microsoft.com/download/symbols
 [Back to top](#Content)
 ## Additional resources
 
-
+ * [WinDbg .printf formatters](https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/-printf#syntax-elements)
+ * [JavaScript Debugger Scripting](https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/javascript-debugger-scripting)
+ * [WinDbg Pseudo-Register Syntax](https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/pseudo-register-syntax#automatic-pseudo-registers)
  * https://www.youtube.com/watch?list=PLhx7-txsG6t6n_E2LgDGqgvJtCHPL7UFu 
  * https://www.youtube.com/playlist?list=PLjAuO31Rg973XOVdi5RXWlrC-XlPZelGn 
- * https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/javascript-debugger-scripting
+
 
 
 [Back to top](#Content)
