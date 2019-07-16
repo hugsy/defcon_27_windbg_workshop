@@ -18,6 +18,7 @@
     - [Useful extensions](#Useful-extensions)
   - [LINQ & Debugger Data Model](#LINQ--Debugger-Data-Model)
   - [WinDbg JavaScript reference](#WinDbg-JavaScript-reference)
+    - [Int64](#Int64)
   - [Time-Travel Debugging](#Time-Travel-Debugging)
   - [Additional resources](#Additional-resources)
 
@@ -208,13 +209,24 @@ srv*C:\Symbols*https://msdl.microsoft.com/download/symbols
 |Read string from memory|`host.memory.readString`<br>`host.memory.readWideString`| |
 |Evaluate expression|`host.evaluateExpression`| |
 |Resolve symbol|`host.getModuleSymbolAddress`| |
-|Dereference a pointer as anobject|`host.createPointerObject(...).dereference()`| |
+|Dereference a pointer as an object|`host.createPointerObject(...).dereference()`| `var pPsLoadedModuleHead = host.createPointerObject(host.getModuleSymbolAddress("nt", "PsLoadedModuleList"), "nt", "_LIST_ENTRY *");` |
 |Dereference memory|`host.evaluateExpression('(int*)0xADDRESS').dereference()`| |
-|Convert string to `Int64`|`host.parseInt64('value')`<br>`host.parseInt64('value', 16 )`|`host.parseInt64('42');`<br>`host.parseInt64('0x1337', 16);`|
 |Get access to the Pseudo-Registers|`host.namespace.Debugger.State.PseudoRegisters`|`var entrypoint = host.namespace.Debugger.State.PseudoRegisters.General.exentry.address;`|
 |Execute WinDbg command|`host.namespace.Debugger.Utility.Control.ExecuteCommand`|`var modules=host.namespace.Debugger.Utility.Control.ExecuteCommand("lm");`|
 |Set Breakpoint|`host.namespace.Debugger.Utility.Control.SetBreakpointAtSourceLocation`<br>`host.namespace.Debugger.Utility.Control.SetBreakpointAtOffset`<br>`host.namespace.Debugger.Utility.Control.SetBreakpointForReadWrite`|
 |Iterate through `LIST_ENTRY`s|`host.namespace.Debugger.Utility.Collections.FromListEntry`|`var process_iterator = host.namespace.Debugger.Utility.Collections.FromListEntry( pAddrOfPsActiveProcessHead, "nt!_EPROCESS", "ActiveProcessLinks")`|
+
+### Int64
+
+| Action | Command | Examples |
+| :--- | --- | --- |
+|Create/Convert an `Int64` object|`host.parseInt64('value')`<br>`host.parseInt64('value', 16 )`|`host.parseInt64('42');`<br>`host.parseInt64('0x1337', 16);`|
+| Add / Substract | `[Int64Obj].add($int)`<br>`[Int64Obj].substract($int)` | `var NextPage = BasePage.add(0x1000);` |
+| Multiply / Divide | `[Int64Obj].multiply($int)`<br>`[Int64Obj].divide($int)` | |
+| Compare | `[Int64Obj1].compareTo([Int64Obj2])` | `BasicBlock.StartAddress.compareTo(Address1) <= 0` |
+| Bitwise operation | and: `[Int64Obj].bitwiseAnd($int)`<br>or: `[Int64Obj].bitwiseOr($int)`<br>xor: `[Int64Obj].bitwiseXor($int)`<br>lsh: `[Int64Obj].bitwiseShiftLeft($shift)`<br>rsh: `[Int64Obj].bitwiseShiftRight($shift)` | `var PageBase = Address.bitwiseAnd(0xfffff000);`<br>`Address.bitwiseShiftLeft(12).bitwiseShiftRight(12);` |
+| Convert `Int64` to native number |  - with exception if precision loss: `[Int64Obj].asNumber()`<br>- no exception if precision loss: `[Int64Obj].convertToNumber()`| |
+
 
 [Back to top](#Content)
 ## Time-Travel Debugging
@@ -236,5 +248,6 @@ srv*C:\Symbols*https://msdl.microsoft.com/download/symbols
 
  * https://www.youtube.com/watch?list=PLhx7-txsG6t6n_E2LgDGqgvJtCHPL7UFu 
  * https://www.youtube.com/playlist?list=PLjAuO31Rg973XOVdi5RXWlrC-XlPZelGn 
-
+ * https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/javascript-debugger-scripting
+ *
 [Back to top](#Content)
