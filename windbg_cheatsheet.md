@@ -277,8 +277,7 @@ Download [JsProvider.d.ts](JsProvider.d.ts) to the root of your script and add t
  * [WinDbg .printf formatters](https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/-printf#syntax-elements)
  * [JavaScript Debugger Scripting](https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/javascript-debugger-scripting)
  * [WinDbg Pseudo-Register Syntax](https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/pseudo-register-syntax#automatic-pseudo-registers)
- * https://www.youtube.com/watch?list=PLhx7-txsG6t6n_E2LgDGqgvJtCHPL7UFu 
- * https://www.youtube.com/playlist?list=PLjAuO31Rg973XOVdi5RXWlrC-XlPZelGn 
+ * [WinDbg Playlist on YouTube](https://www.youtube.com/watch?v=d5Xr6oqu_ac&list=PLjAuO31Rg973XOVdi5RXWlrC-XlPZelGn)
 
 
 
