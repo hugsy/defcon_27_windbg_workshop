@@ -21,6 +21,7 @@
   - [LINQ & Debugger Data Model](#LINQ--Debugger-Data-Model)
   - [WinDbg JavaScript reference](#WinDbg-JavaScript-reference)
     - [Dealing with `host.Int64`](#Dealing-with-hostInt64)
+    - [WinDbg gallery skeleton](#WinDbg-gallery-skeleton)
   - [Time-Travel Debugging](#Time-Travel-Debugging)
   - [Additional resources](#Additional-resources)
 
@@ -256,6 +257,63 @@ Download [JsProvider.d.ts](JsProvider.d.ts) to the root of your script and add t
 | Bitwise operation | and: `[Int64Obj].bitwiseAnd($int)`<br>or: `[Int64Obj].bitwiseOr($int)`<br>xor: `[Int64Obj].bitwiseXor($int)`<br>lsh: `[Int64Obj].bitwiseShiftLeft($shift)`<br>rsh: `[Int64Obj].bitwiseShiftRight($shift)` | `var PageBase = Address.bitwiseAnd(0xfffff000);`<br>`Address.bitwiseShiftLeft(12).bitwiseShiftRight(12);` |
 | Convert `Int64` to native number |  - with exception if precision loss: `[Int64Obj].asNumber()`<br>- no exception if precision loss: `[Int64Obj].convertToNumber()`| |
 
+### WinDbg gallery skeleton
+
+Only 3 files are needed (see [5] for more details):
+
+ - `config.xml`
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Settings Version="1">
+  <Namespace Name="Extensions">
+    <Setting Name="ExtensionRepository" Type="VT_BSTR" Value="Implicit"></Setting>
+    <Namespace Name="ExtensionRepositories">
+      <Namespace Name="My Awesome Gallery">
+        <Setting Name="Id" Type="VT_BSTR" Value="any-guid-will-do"></Setting>
+        <Setting Name="LocalCacheRootFolder" Type="VT_BSTR" Value="\absolute\path\to\the\xmlmanifest\directory"></Setting>
+        <Setting Name="IsEnabled" Type="VT_BOOL" Value="true"></Setting>
+      </Namespace>
+    </Namespace>
+  </Namespace>
+</Settings>
+```
+
+ - `ManifestVersion.txt`
+```text
+1
+1.0.0.0
+1
+```
+
+ - `Manifest.X.xml` (where `X` is the version number, let's just use `1` so it is `Manifest.1.xml`)
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<ExtensionPackages Version="1.0.0.0" Compression="none">
+  <ExtensionPackage>
+    <Name>Script1</Name>
+    <Version>1.0.0.0</Version>
+    <Description>Description of Script1.</Description>
+    <Components>
+      <ScriptComponent Name="Script1" Type="Engine" File=".\relative\path\to\Script1.js" FilePathKind="RepositoryRelative">
+        <FunctionAliases>
+          <FunctionAlias Name="AliasCreatedByScript`">
+            <AliasItem>
+              <Syntax><![CDATA[!AliasCreatedByScript]]></Syntax>
+              <Description><![CDATA[Quick description of AliasCreatedByScript.]]></Description>
+            </AliasItem>
+          </FunctionAlias>
+        </FunctionAliases>
+      </ScriptComponent>
+    </Components>
+  </ExtensionPackage>
+</ExtensionPackages>
+```
+
+Then in WinDbg load & save:
+```
+0:000> .settings load \path\to\config.xml
+0:000> .settings save
+```
 
 [Back to top](#Content)
 ## Time-Travel Debugging
@@ -274,10 +332,11 @@ Download [JsProvider.d.ts](JsProvider.d.ts) to the root of your script and add t
 [Back to top](#Content)
 ## Additional resources
 
- * [WinDbg .printf formatters](https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/-printf#syntax-elements)
- * [JavaScript Debugger Scripting](https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/javascript-debugger-scripting)
- * [WinDbg Pseudo-Register Syntax](https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/pseudo-register-syntax#automatic-pseudo-registers)
- * [WinDbg Playlist on YouTube](https://www.youtube.com/watch?v=d5Xr6oqu_ac&list=PLjAuO31Rg973XOVdi5RXWlrC-XlPZelGn)
+ 1. [WinDbg .printf formatters](https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/-printf#syntax-elements)
+ 2. [JavaScript Debugger Scripting](https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/javascript-debugger-scripting)
+ 3. [WinDbg Pseudo-Register Syntax](https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/pseudo-register-syntax#automatic-pseudo-registers)
+ 4. [WinDbg Playlist on YouTube](https://www.youtube.com/watch?v=d5Xr6oqu_ac&list=PLjAuO31Rg973XOVdi5RXWlrC-XlPZelGn)
+ 5. [WinDbg Extension Gallery](https://github.com/microsoft/WinDbg-Samples/tree/master/Manifest)
 
 
 
