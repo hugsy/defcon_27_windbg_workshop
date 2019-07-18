@@ -279,7 +279,7 @@ Only 3 files are needed (see [5] for more details):
 ```
 
  - `ManifestVersion.txt`
-```text
+```
 1
 1.0.0.0
 1
