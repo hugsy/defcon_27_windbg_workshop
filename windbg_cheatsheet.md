@@ -234,7 +234,7 @@ Download [JsProvider.d.ts](JsProvider.d.ts) to the root of your script and add t
 | Action | Command | Examples |
 | :--- | --- | --- |
 | Print message | `host.diagnostics.debugLog(Message)` | |
-| Read data from memory | `host.memory.readMemoryValues(0xAddr)` | |
+| Read data from memory | `host.memory.readMemoryValues(0xAddr, Length)` | |
 |Read string from memory|`host.memory.readString(0xAddr)`<br>`host.memory.readWideString(0xAddr)`| |
 |Evaluate expression|`host.evaluateExpression([EXPR])`| |
 |Resolve symbol|`host.getModuleSymbolAddress(mod, sym)`| `var pRtlAllocateHeap = host.getModuleSymbolAddress('ntdll', 'RtlAllocateHeap');`|
