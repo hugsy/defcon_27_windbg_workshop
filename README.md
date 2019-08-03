@@ -42,5 +42,5 @@ Any modern laptop running Windows 10 + a hypervisor with one Windows 10 VM guest
  * `hugsy` 
    * [![twitter](https://i.imgur.com/BIbG3EG.png)](https://twitter.com/_hugsy_) [![gh](https://i.imgur.com/TFRgRGW.png)](https://github.com/hugsy)
    
- * `0verclok` 
+ * `0vercl0k` 
    * [![twitter](https://i.imgur.com/BIbG3EG.png)](https://twitter.com/0vercl0k) [![gh](https://i.imgur.com/TFRgRGW.png)](https://github.com/0vercl0k)
