@@ -2,28 +2,28 @@
 
 ## Content
 
-- [WinDbg cheatsheet](#WinDbg-cheatsheet)
-  - [Content](#Content)
-  - [Setup](#Setup)
-    - [Symbol Path](#Symbol-Path)
-    - [Providers](#Providers)
-    - [VS Code linting](#VS-Code-linting)
-  - [Commands](#Commands)
-    - [Basic commands](#Basic-commands)
+- [WinDbg cheatsheet](#windbg-cheatsheet)
+  - [Content](#content)
+  - [Setup](#setup)
+    - [Symbol Path](#symbol-path)
+    - [Providers](#providers)
+    - [VS Code linting](#vs-code-linting)
+  - [Commands](#commands)
+    - [Basic commands](#basic-commands)
       - [`.printf` formatters](#printf-formatters)
-    - [Execution flow](#Execution-flow)
-    - [Registers / Memory access](#Registers--Memory-access)
-    - [Memory search](#Memory-search)
-    - [Breakpoints](#Breakpoints)
-    - [Symbols](#Symbols)
-    - [Convenience variables and functions](#Convenience-variables-and-functions)
-    - [Useful extensions](#Useful-extensions)
-  - [LINQ & Debugger Data Model](#LINQ--Debugger-Data-Model)
-  - [WinDbg JavaScript reference](#WinDbg-JavaScript-reference)
-    - [Dealing with `host.Int64`](#Dealing-with-hostInt64)
-    - [WinDbg gallery skeleton](#WinDbg-gallery-skeleton)
-  - [Time-Travel Debugging](#Time-Travel-Debugging)
-  - [Additional resources](#Additional-resources)
+    - [Execution flow](#execution-flow)
+    - [Registers / Memory access](#registers--memory-access)
+    - [Memory search](#memory-search)
+    - [Breakpoints](#breakpoints)
+    - [Symbols](#symbols)
+    - [Convenience variables and functions](#convenience-variables-and-functions)
+    - [Useful extensions](#useful-extensions)
+  - [LINQ & Debugger Data Model](#linq--debugger-data-model)
+  - [WinDbg JavaScript reference](#windbg-javascript-reference)
+    - [Dealing with `host.Int64`](#dealing-with-hostint64)
+    - [WinDbg gallery skeleton](#windbg-gallery-skeleton)
+  - [Time-Travel Debugging](#time-travel-debugging)
+  - [Additional resources](#additional-resources)
 
 
 
@@ -96,8 +96,8 @@ Download [JsProvider.d.ts](JsProvider.d.ts) to the root of your script and add t
 |ASCII C string (i.e. NULL terminated)|`%ma`||
 |Wide C string (i.e. NULL terminated)|`%mu`||
 |UNICODE_STRING** string|`%msu`||
-|Print the symbol pointed by address|`%y`|`.printf “%p\n”,nt!PsLoadedModuleList  // returns 0xffff8009bc2010`|
-|Pointer|`%p`|`.printf “%y\n”,ffff8009bc2010 // returns nt!PsLoadedModuleList`|
+|Print the symbol pointed by address|`%y`|`.printf “%y\n”,ffff8009bc2010 // returns nt!PsLoadedModuleList`|
+|Print a Pointer|`%p`|`.printf “%p\n”,nt!PsLoadedModuleList  // returns 0xffff8009bc2010`|
 
 [Back to top](#Content)
 ### Execution flow 
