@@ -147,6 +147,7 @@ Download [JsProvider.d.ts](JsProvider.d.ts) to the root of your script and add t
 | :--- | --- | --- |
 | Examine | `x`|`x nt!*CreateProcess*`|
 | Display types|`dt`|`dt ntdll!_PEB @$peb`<br>`dt ntdll!_TEB –r @$teb`|
+| Display Type Extended - with Debugger Object Model |`dtx`|`dtx nt!_PEB 0x000008614a7a000`<br>which is equivalent to<br>`dx (nt!_PEB*)0x000008614a7a000`|
 | Set breakpoint|`bp` <br>`bp 0xaddr (or mod!symbol)`| |
 |List breakpoints| `bl` | |
 |Disable breakpoint(s)| `bd [IDX]` (`IDX` is returned by `bl`) | `bd 1`<br>`bd *` |
