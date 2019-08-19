@@ -18,6 +18,7 @@
     - [Symbols](#symbols)
     - [Convenience variables and functions](#convenience-variables-and-functions)
     - [Useful extensions](#useful-extensions)
+    - [.Net debugging](#net-debugging)
   - [LINQ & Debugger Data Model](#linq--debugger-data-model)
   - [WinDbg JavaScript reference](#windbg-javascript-reference)
     - [Dealing with `host.Int64`](#dealing-with-hostint64)
@@ -205,6 +206,13 @@ Download [JsProvider.d.ts](JsProvider.d.ts) to the root of your script and add t
 |Encode/decode pointer encoded<br>by KernelBase API `EncodePointer()`|`!encodeptr32` (or `64`)<br>`!decodeptr32` (or `64`)|
 |Display the current exception handler|`!exchain`||
 |Dump UM heap information|`!heap`||
+
+[Back to top](#Content)
+### .NET Debugging
+
+| Action | Command | Examples |
+| :--- | --- | --- |
+|Load the CLR extensions | `sxe ld clr; g` to make sure `clr.dll` is loaded, then `.loadby sos clr` | |
 
 
 [Back to top](#Content)
