@@ -18,7 +18,7 @@
     - [Symbols](#symbols)
     - [Convenience variables and functions](#convenience-variables-and-functions)
     - [Useful extensions](#useful-extensions)
-    - [.Net debugging](#net-debugging)
+    - [.NET debugging](#net-debugging)
   - [LINQ & Debugger Data Model](#linq--debugger-data-model)
   - [WinDbg JavaScript reference](#windbg-javascript-reference)
     - [Dealing with `host.Int64`](#dealing-with-hostint64)
@@ -212,8 +212,11 @@ Download [JsProvider.d.ts](JsProvider.d.ts) to the root of your script and add t
 
 | Action | Command | Examples |
 | :--- | --- | --- |
-|Load the CLR extensions | `sxe ld clr; g` to make sure `clr.dll` is loaded, then `.loadby sos clr` | |
-
+|Load the CLR extensions | `.loadby sos clr` | `sxe ld clr; g` to make sure `clr.dll` is loaded, then `.loadby sos clr` |
+|Get help| `!help` | |
+|Set managed code breakpoint| `!bpmd` | `!bpmd mscorlib.dll System.Reflection.Assembly.Load` <br> `!bpmd System.dll System.Diagnostics.Process.Start` | 
+|Dump objects| `!DumpObj` | `!DumpObj /d 0x<address>` |
+|Dump the .NET stack| `!CLRStack` | `!CLRStack -p` |
 
 [Back to top](#Content)
 ## LINQ & Debugger Data Model 
@@ -346,6 +349,7 @@ Then in WinDbg load & save:
  3. [WinDbg Pseudo-Register Syntax](https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/pseudo-register-syntax#automatic-pseudo-registers)
  4. [WinDbg Playlist on YouTube](https://www.youtube.com/watch?v=d5Xr6oqu_ac&list=PLjAuO31Rg973XOVdi5RXWlrC-XlPZelGn)
  5. [WinDbg Extension Gallery](https://github.com/microsoft/WinDbg-Samples/tree/master/Manifest)
+ 6. [SOS commands for .NET debugging](https://docs.microsoft.com/en-us/dotnet/framework/tools/sos-dll-sos-debugging-extension)
 
 
 
