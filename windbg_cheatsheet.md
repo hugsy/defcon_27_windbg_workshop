@@ -214,7 +214,10 @@ Download [JsProvider.d.ts](JsProvider.d.ts) to the root of your script and add t
 | :--- | --- | --- |
 |Load the CLR extensions | `.loadby sos clr` | `sxe ld clr; g` to make sure `clr.dll` is loaded, then `.loadby sos clr` |
 |Get help| `!help` | |
-|Set managed code breakpoint| `!bpmd` | `!bpmd mscorlib.dll System.Reflection.Assembly.Load` <br> `!bpmd System.dll System.Diagnostics.Process.Start` <br> `!bpmd System.dll System.Net.WebClient.DownloadFile`| 
+|Set managed code breakpoint| `!bpmd <module> Path.To.Function` | `!bpmd mscorlib.dll System.Reflection.Assembly.Load` <br> `!bpmd System.dll System.Diagnostics.Process.Start` <br> `!bpmd System.dll System.Net.WebClient.DownloadFile`| 
+|List all managed code breakpoints| `!bpmd -list` | | 
+|Clear specific managed code breakpoint| `!bpmd -clear $BreakpointNumber` | | 
+|Clear all managed code breakpoints| `!bpmd -clearall` | | 
 |Dump objects| `!DumpObj` | `!DumpObj /d 0x<address>` |
 |Dump the .NET stack| `!CLRStack` | `!CLRStack -p` |
 
