@@ -8,6 +8,7 @@
     - [Symbol Path](#symbol-path)
     - [Providers](#providers)
     - [VS Code linting](#vs-code-linting)
+    - [Kernel Debugging](#kernel-debugging)
   - [Commands](#commands)
     - [Basic commands](#basic-commands)
       - [`.printf` formatters](#printf-formatters)
@@ -68,6 +69,17 @@ Download [JsProvider.d.ts](JsProvider.d.ts) to the root of your script and add t
 "use strict";
 ```
 
+### Kernel Debugging
+
+* [Increase the kernel verbosity level](https://docs.microsoft.com/en-us/windows-hardware/drivers/devtest/reading-and-filtering-debugging-messages#setting-the-component-filter-mask) from calls to `KdPrintEx()` 
+  * temporarily during runtime from WinDbg (lost once session is closed)
+```
+kd> ed nt!Kd_Default_Mask 0xf
+```
+  * permanently from registry hive (in Admin prompt on Debuggee)
+```
+C:\> reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Debug Print Filter" /v DEFAULT /t REG_DWORD /d 0xf
+```
 
 ## Commands
 
