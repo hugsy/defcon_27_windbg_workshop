@@ -279,7 +279,7 @@ C:\> reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Debug Print 
 | Action | Command | Examples |
 | :--- | --- | --- |
 |Create/Convert an `Int64` object|`host.parseInt64('value')`<br>`host.parseInt64('value', 16 )`|`host.parseInt64('42');`<br>`host.parseInt64('0x1337', 16);`|
-| Add / Substract | `[Int64Obj].add($int)`<br>`[Int64Obj].substract($int)` | `var NextPage = BasePage.add(0x1000);` |
+| Add / Subtract | `[Int64Obj].add($int)`<br>`[Int64Obj].subtract($int)` | `var NextPage = BasePage.add(0x1000);`<br> `var NextPage = BasePage.subtract(0x1000);` |
 | Multiply / Divide | `[Int64Obj].multiply($int)`<br>`[Int64Obj].divide($int)` | |
 | Compare | `[Int64Obj1].compareTo([Int64Obj2])` | `BasicBlock.StartAddress.compareTo(Address1) <= 0` |
 | Bitwise operation | and: `[Int64Obj].bitwiseAnd($int)`<br>or: `[Int64Obj].bitwiseOr($int)`<br>xor: `[Int64Obj].bitwiseXor($int)`<br>lsh: `[Int64Obj].bitwiseShiftLeft($shift)`<br>rsh: `[Int64Obj].bitwiseShiftRight($shift)` | `var PageBase = Address.bitwiseAnd(0xfffff000);`<br>`Address.bitwiseShiftLeft(12).bitwiseShiftRight(12);` |
