@@ -8,6 +8,7 @@
     - [Symbol Path](#symbol-path)
     - [Providers](#providers)
     - [VS Code linting](#vs-code-linting)
+    - [Kernel Debugging](#kernel-debugging)
   - [Commands](#commands)
     - [Basic commands](#basic-commands)
       - [`.printf` formatters](#printf-formatters)
@@ -18,6 +19,7 @@
     - [Symbols](#symbols)
     - [Convenience variables and functions](#convenience-variables-and-functions)
     - [Useful extensions](#useful-extensions)
+    - [.NET Debugging](#net-debugging)
   - [LINQ & Debugger Data Model](#linq--debugger-data-model)
   - [WinDbg JavaScript reference](#windbg-javascript-reference)
     - [Dealing with `host.Int64`](#dealing-with-hostint64)
@@ -67,6 +69,17 @@ Download [JsProvider.d.ts](JsProvider.d.ts) to the root of your script and add t
 "use strict";
 ```
 
+### Kernel Debugging
+
+* [Increase the kernel verbosity level](https://docs.microsoft.com/en-us/windows-hardware/drivers/devtest/reading-and-filtering-debugging-messages#setting-the-component-filter-mask) from calls to `KdPrintEx()`
+  * temporarily during runtime from WinDbg (lost once session is closed)
+```
+kd> ed nt!Kd_Default_Mask 0xf
+```
+  * permanently from registry hive (in Admin prompt on Debuggee)
+```
+C:\> reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Debug Print Filter" /v DEFAULT /t REG_DWORD /d 0xf
+```
 
 ## Commands
 
@@ -96,8 +109,8 @@ Download [JsProvider.d.ts](JsProvider.d.ts) to the root of your script and add t
 | ASCII C string (i.e. NULL terminated) | `%ma`     |                                                                     |
 | Wide C string (i.e. NULL terminated)  | `%mu`     |                                                                     |
 | UNICODE_STRING** string               | `%msu`    |                                                                     |
-| Print the symbol pointed by address   | `%y`      | `.printf “%p\n”,nt!PsLoadedModuleList  // returns 0xffff8009bc2010` |
-| Pointer                               | `%p`      | `.printf “%y\n”,ffff8009bc2010 // returns nt!PsLoadedModuleList`    |
+| Print the symbol pointed by address   | `%y`      | `.printf “%y\n”,ffff8009bc2010 // returns nt!PsLoadedModuleList`    |
+| Print a Pointer                       | `%p`      | `.printf “%p\n”,nt!PsLoadedModuleList  // returns 0xffff8009bc2010` |
 
 [Back to top](#Content)
 ### Execution flow 
@@ -143,19 +156,20 @@ Download [JsProvider.d.ts](JsProvider.d.ts) to the root of your script and add t
 [Back to top](#Content)
 ### Breakpoints 
 
-| Action                                 | Command                                                                                                                                     | Examples                                                                      |
-| :------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| Examine                                | `x`                                                                                                                                         | `x nt!*CreateProcess*`                                                        |
-| Display types                          | `dt`                                                                                                                                        | `dt ntdll!_PEB @$peb`<br>`dt ntdll!_TEB –r @$teb`                             |
-| Set breakpoint                         | `bp` <br>`bp 0xaddr (or mod!symbol)`                                                                                                        |                                                                               |
-| List breakpoints                       | `bl`                                                                                                                                        |                                                                               |
-| Disable breakpoint(s)                  | `bd [IDX]` (`IDX` is returned by `bl`)                                                                                                      | `bd 1`<br>`bd *`                                                              |
-| Delete breakpoint(s)                   | `bc [IDX]` (`IDX` is returned by `bl`)                                                                                                      | `bc 0`<br>`bc *`                                                              |
-| (Un)Set exception on event             | `sx`                                                                                                                                        | `sxe ld mydll.dll`                                                            |
-| Break on memory access                 | `ba`                                                                                                                                        | `ba r 4 @esp`                                                                 |
-| Define breakpoint command              | `bp … [Command]`<br>Where [Command] can be<br>- an action: "`r ; g`"<br>- a condition: "`.if (@$rax == 1) {.printf \"rcx=%p\\\n\", @rcx }`" | `bp kernel32!CreateFileA "da @rcx; g"` "                                      |
-| Enable breakpoint **after** *N* hit(s) | `bp <address> N+1`                                                                                                                          | `bp /1 0xaddr` (temporary breakpoint)<br>`bp 0xaddr 7` (disable after 6 hits) |
-| Set "undefined" breakpoint             | `bu <address>`                                                                                                                              |                                                                               |
+| Action                                             | Command                                                                                                                                     | Examples                                                                                      |
+| :------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| Examine                                            | `x`                                                                                                                                         | `x nt!*CreateProcess*`                                                                        |
+| Display types                                      | `dt`                                                                                                                                        | `dt ntdll!_PEB @$peb`<br>`dt ntdll!_TEB –r @$teb`                                             |
+| Display Type Extended - with Debugger Object Model | `dtx`                                                                                                                                       | `dtx nt!_PEB 0x000008614a7a000`<br>which is equivalent to<br>`dx (nt!_PEB*)0x000008614a7a000` |
+| Set breakpoint                                     | `bp` <br>`bp 0xaddr (or mod!symbol)`                                                                                                        |                                                                                               |
+| List breakpoints                                   | `bl`                                                                                                                                        |                                                                                               |
+| Disable breakpoint(s)                              | `bd [IDX]` (`IDX` is returned by `bl`)                                                                                                      | `bd 1`<br>`bd *`                                                                              |
+| Delete breakpoint(s)                               | `bc [IDX]` (`IDX` is returned by `bl`)                                                                                                      | `bc 0`<br>`bc *`                                                                              |
+| (Un)Set exception on event                         | `sx`                                                                                                                                        | `sxe ld mydll.dll`                                                                            |
+| Break on memory access                             | `ba`                                                                                                                                        | `ba r 4 @esp`                                                                                 |
+| Define breakpoint command                          | `bp … [Command]`<br>Where [Command] can be<br>- an action: "`r ; g`"<br>- a condition: "`.if (@$rax == 1) {.printf \"rcx=%p\\\n\", @rcx }`" | `bp kernel32!CreateFileA "da @rcx; g"` "                                                      |
+| Enable breakpoint **after** *N* hit(s)             | `bp <address> N+1`                                                                                                                          | `bp /1 0xaddr` (temporary breakpoint)<br>`bp 0xaddr 7` (disable after 6 hits)                 |
+| Set "undefined" breakpoint                         | `bu <address>`                                                                                                                              |                                                                                               |
 
 
 
@@ -205,6 +219,20 @@ Download [JsProvider.d.ts](JsProvider.d.ts) to the root of your script and add t
 | Display the current exception handler                                | `!exchain`                                                                               |                              |
 | Dump UM heap information                                             | `!heap`                                                                                  |                              |
 
+[Back to top](#Content)
+### .NET Debugging
+
+| Action                                 | Command                           | Examples                                                                                                                                                                |
+| :------------------------------------- | --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Load the CLR extensions                | `.loadby sos clr`                 | `sxe ld clr; g` to make sure `clr.dll` is loaded, then `.loadby sos clr`                                                                                                |
+| Get help                               | `!help`                           |                                                                                                                                                                         |
+| Set managed code breakpoint            | `!bpmd <module> Path.To.Function` | `!bpmd mscorlib.dll System.Reflection.Assembly.Load` <br> `!bpmd System.dll System.Diagnostics.Process.Start` <br> `!bpmd System.dll System.Net.WebClient.DownloadFile` |
+| List all managed code breakpoints      | `!bpmd -list`                     |                                                                                                                                                                         |
+| Clear specific managed code breakpoint | `!bpmd -clear $BreakpointNumber`  |                                                                                                                                                                         |
+| Clear all managed code breakpoints     | `!bpmd -clearall`                 |                                                                                                                                                                         |
+| Dump objects                           | `!DumpObj`                        | `!DumpObj /d 0x<address>`                                                                                                                                               |
+| Dump the .NET stack                    | `!CLRStack`                       | `!CLRStack -p`                                                                                                                                                          |
+
 
 [Back to top](#Content)
 ## LINQ & Debugger Data Model 
@@ -236,7 +264,7 @@ Download [JsProvider.d.ts](JsProvider.d.ts) to the root of your script and add t
 | Print message                      | `host.diagnostics.debugLog(Message)`                                                                                                                                                                              |                                                                                                                                                       |
 | Read data from memory              | `host.memory.readMemoryValues(0xAddr, Length)`                                                                                                                                                                    |                                                                                                                                                       |
 | Read string from memory            | `host.memory.readString(0xAddr)`<br>`host.memory.readWideString(0xAddr)`                                                                                                                                          |                                                                                                                                                       |
-| Evaluate expression                | `host.evaluateExpression([EXPR])`                                                                                                                                                                                 |                                                                                                                                                       |
+| Evaluate expression                | `host.evaluateExpression([EXPR])`                                                                                                                                                                                 | `var res=host.evaluateExpression("sizeof(_LIST_ENTRY)")`<br>`dx @$scriptContents.host.evaluateExpression("sizeof(_LIST_ENTRY)")`                      |
 | Resolve symbol                     | `host.getModuleSymbolAddress(mod, sym)`                                                                                                                                                                           | `var pRtlAllocateHeap = host.getModuleSymbolAddress('ntdll', 'RtlAllocateHeap');`                                                                     |
 | Dereference a pointer as an object | `host.createPointerObject(...).dereference()`                                                                                                                                                                     | `var pPsLoadedModuleHead = host.createPointerObject(host.getModuleSymbolAddress("nt", "PsLoadedModuleList"), "nt", "_LIST_ENTRY *");`                 |
 | Create typed variable from address | `host.createTypedObject(addr, module, symbol)`                                                                                                                                                                    | `var loader_data_entry = host.createTypedObject(0xAddress,"nt","_LDR_DATA_TABLE_ENTRY")`                                                              |
@@ -251,7 +279,7 @@ Download [JsProvider.d.ts](JsProvider.d.ts) to the root of your script and add t
 | Action                           | Command                                                                                                                                                                                                   | Examples                                                                                                  |
 | :------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
 | Create/Convert an `Int64` object | `host.parseInt64('value')`<br>`host.parseInt64('value', 16 )`                                                                                                                                             | `host.parseInt64('42');`<br>`host.parseInt64('0x1337', 16);`                                              |
-| Add / Substract                  | `[Int64Obj].add($int)`<br>`[Int64Obj].substract($int)`                                                                                                                                                    | `var NextPage = BasePage.add(0x1000);`                                                                    |
+| Add / Subtract                   | `[Int64Obj].add($int)`<br>`[Int64Obj].subtract($int)`                                                                                                                                                     | `var NextPage = BasePage.add(0x1000);`<br> `var NextPage = BasePage.subtract(0x1000);`                    |
 | Multiply / Divide                | `[Int64Obj].multiply($int)`<br>`[Int64Obj].divide($int)`                                                                                                                                                  |                                                                                                           |
 | Compare                          | `[Int64Obj1].compareTo([Int64Obj2])`                                                                                                                                                                      | `BasicBlock.StartAddress.compareTo(Address1) <= 0`                                                        |
 | Bitwise operation                | and: `[Int64Obj].bitwiseAnd($int)`<br>or: `[Int64Obj].bitwiseOr($int)`<br>xor: `[Int64Obj].bitwiseXor($int)`<br>lsh: `[Int64Obj].bitwiseShiftLeft($shift)`<br>rsh: `[Int64Obj].bitwiseShiftRight($shift)` | `var PageBase = Address.bitwiseAnd(0xfffff000);`<br>`Address.bitwiseShiftLeft(12).bitwiseShiftRight(12);` |
@@ -337,6 +365,7 @@ Then in WinDbg load & save:
  3. [WinDbg Pseudo-Register Syntax](https://docs.microsoft.com/en-us/windows-hardware/drivers/debugger/pseudo-register-syntax#automatic-pseudo-registers)
  4. [WinDbg Playlist on YouTube](https://www.youtube.com/watch?v=d5Xr6oqu_ac&list=PLjAuO31Rg973XOVdi5RXWlrC-XlPZelGn)
  5. [WinDbg Extension Gallery](https://github.com/microsoft/WinDbg-Samples/tree/master/Manifest)
+ 6. [SOS commands for .NET debugging](https://docs.microsoft.com/en-us/dotnet/framework/tools/sos-dll-sos-debugging-extension)
 
 
 

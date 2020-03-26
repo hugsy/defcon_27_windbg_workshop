@@ -37,6 +37,11 @@ Any modern laptop running Windows 10 + a hypervisor with one Windows 10 VM guest
   * [WindDbg CheatSheet](windbg_cheatsheet.md)
 
 
+## Acknowledgment
+
+This workshop was originally produced as part of my (`hugsy`) work at [**@SophosLabs**](https://github.com/sophoslabs) in the Offensive Security Team.
+
+
 ## Authors
 
  * `hugsy` 
