@@ -143,7 +143,7 @@ C:\> reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Debug Print 
 | Dump MZ/PE header info                                                 | `!dh`                                                                                                       | `!dh kernel32`<br>`!dh @rax`                                                               |
 | Read / write physical memory<br>(syntax similar to `dX`/`eX` commands) | `!db` / `!eb` <br>`!dw` / `!ew` <br>`!dd` / `!ed` <br>`!dq` / `!eq`                                         |                                                                                            |
 | Fill / Compare memory                                                  | `f`<br> `c`                                                                                                 | `f @rsp l8 41`<br> `c @rsp l8 @rip`                                                        |
-| Dereference memory                                                     | `poi(<AddrOrSymbol>)`: dereference pointer size<br>`dwo()`: dereference DWORD<br>`qwo()`: dereference QWORD | `db poi( @$rax )`                                                                          |
+| Dereference memory                                                     | `poi(<AddrOrSymbol>)`: dereference pointer size<br>`wo()`: dereference WORD<br>`dwo()`: dereference DWORD<br>`qwo()`: dereference QWORD | `db poi( @$rax )`                                                                          |
 
 [Back to top](#Content)
 ### Memory search
