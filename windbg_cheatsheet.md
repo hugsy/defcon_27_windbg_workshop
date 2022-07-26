@@ -80,7 +80,7 @@ kd> ed nt!Kd_Default_Mask 0xf
 ```
   * permanently from registry hive (in Admin prompt on Debuggee)
 ```
-C:\> reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Debug Print Filter" /v DEFAULT /t REG_DWORD /d 0xf
+C:\> reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Debug Print Filter" /v DEFAULT /t REG_DWORD /d 0xffff
 ```
 
 ## Commands
