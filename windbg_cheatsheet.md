@@ -1,37 +1,13 @@
 # WinDbg cheatsheet
 
-## Content
-
-- [WinDbg cheatsheet](#windbg-cheatsheet)
-  - [Content](#content)
-  - [Setup](#setup)
-    - [Symbol Path](#symbol-path)
-    - [Providers](#providers)
-    - [VS Code linting](#vs-code-linting)
-    - [Kernel Debugging](#kernel-debugging)
-  - [Commands](#commands)
-    - [Basic commands](#basic-commands)
-      - [`.printf` formatters](#printf-formatters)
-    - [Execution flow](#execution-flow)
-    - [Registers / Memory access](#registers--memory-access)
-    - [Memory search](#memory-search)
-    - [Breakpoints](#breakpoints)
-    - [Symbols](#symbols)
-    - [Convenience variables and functions](#convenience-variables-and-functions)
-    - [Useful extensions](#useful-extensions)
-    - [.NET Debugging](#net-debugging)
-  - [LINQ & Debugger Data Model](#linq--debugger-data-model)
-    - [Variables](#variables)
-    - [Functions](#functions)
-  - [WinDbg JavaScript reference](#windbg-javascript-reference)
-    - [Dealing with `host.Int64`](#dealing-with-hostint64)
-    - [WinDbg gallery skeleton](#windbg-gallery-skeleton)
-  - [Time-Travel Debugging](#time-travel-debugging)
-  - [Additional resources](#additional-resources)
-
-
-
 ## Setup
+
+### Installation
+
+* From the [Microsoft Store](https://apps.microsoft.com/store/detail/windbg-preview/9PGJGD53TN86?hl=en-us&gl=us)
+  * Or [using a package downloader](https://twitter.com/windbgtips/status/1264707080872620038)
+* Using [`winget`](https://learn.microsoft.com/en-us/windows/package-manager/winget/)
+  * `winget install windbg` 
 
 ### Symbol Path
 
@@ -353,7 +329,7 @@ Then in WinDbg load & save:
 ```
 
 [Back to top](#Content)
-## Time-Travel Debugging
+## Time-Travel Debugging [`TTD`](https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/time-travel-debugging-ttd-exe-command-line-util)
 
 | Action                            | Command                                  | Examples                                                                                                 |
 | :-------------------------------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------- |
