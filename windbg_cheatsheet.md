@@ -72,12 +72,13 @@ C:\> reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Debug Print 
 | Print a string                                                               | `.echo`         | `.echo "Hello world"`                                         |
 | Print a formatted string<br>(see [printf formatters](#printf-formatters))    | `.printf`       | `.printf "Hello %ma\n" , @$esp`                               |
 | Command separator                                                            | `;`             | `command1 ; command2`                                         |
-| Attach (Detach) to (from) process                                            | `.attach`       | `.detach`                                                     | `.attach 0n<PID>` |
+| Attach (Detach) to (from) process                                            | `.attach`       | `.detach` <br> `.attach 0n<PID>` |
 | Display parameter value under different formats (hexadcimal, decimal, octal) | `.formats`      | `.formats 0x42`                                               |
-| Change default base                                                          | `n`             | `n 8`                                                         | `n 10`            |
+| Change default base                                                          | `n`             | `n 8` <br> `n 10`            |
 | Quit WinDbg (will kill the process if not detached)                          | `q`             |                                                               |
 | Restart debugging session                                                    | `.restart`      |                                                               |
 | Reboot system (KD)                                                           | `.reboot`       |                                                               |
+| Display register on Break | `.prompt_allow +reg` | |
 
 [Back to top](#Content)
 #### `.printf` formatters
@@ -109,7 +110,7 @@ C:\> reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Debug Print 
 
 | Action                                                                 | Command                                                                                                     | Examples                                                                                   |
 | :--------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| Read memory As                                                         | bytes: `db`<br>word: `dw`<br>dword: `dd`<br>qword: `dq`<br>pointer: `dp`<br>unicode string: `dW`            | `db @sp 41 41 41 41`<br>`dw @rip`<br>`dd @rax l4`<br>`dyb @rip`<br>`dps @esp`<br>`dW @rsp` |
+| Read memory As                                                         | bytes: `db`<br>word: `dw`<br>dword: `dd`<br>qword: `dq`<br>pointer: `dp`<br>unicode string: `dS`            | `db @sp 41 41 41 41`<br>`dw @rip`<br>`dd @rax l4`<br>`dyb @rip`<br>`dps @esp`<br>`dS @rsp` |
 | Write memory As                                                        | bytes: `eb`<br>word: `ew`<br>dword: `ed`<br>qword: `eq`<br>ascii string:`ea`<br>Unicode string: `eu`        | <br><br><br>`ea @pc "AAAA"`                                                                |
 | Read register(s)                                                       | `r`<br>`r [[REG0],REG1,...]`                                                                                | `r rax,rbp`                                                                                |
 | Write register(s)                                                      | `r [REG]=[VALUE]`                                                                                           | `r rip=4141414141414141`                                                                   |
