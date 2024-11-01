@@ -14,7 +14,7 @@
 In a command prompt:
 
 ```batch
-C:\> setx _NT_SYMBOL_PATH srv*C:\Symbols*https://msdl.microsoft.com/download/symbols
+setx _NT_SYMBOL_PATH srv*C:\Symbols*https://msdl.microsoft.com/download/symbols
 ```
 
 In WinDbg, `Ctrl+S` then
